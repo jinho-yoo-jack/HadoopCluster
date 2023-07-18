@@ -1,0 +1,113 @@
+version: "3.8"
+
+services:
+  namenode-1:
+    container_name: ${NN_ACTIVE_NAME}
+    hostname: ${NN_ACTIVE_NAME}
+    image: hadoop-cluster:latest
+    ports:
+      - 18080:8080
+      - 50171:50071 # Namenode_Master WEB UI
+      - 19888:19888
+    volumes:
+      - ./config/core-site.xml:/home/hadoop/bin/hadoop/etc/hadoop/core-site.xml
+      - ./config/hdfs-site.xml:/home/hadoop/bin/hadoop/etc/hadoop/hdfs-site.xml
+      - ./config/yarn-site.xml:/home/hadoop/bin/hadoop/etc/hadoop/yarn-site.xml
+      - ./config/mapred-site.xml:/home/hadoop/bin/hadoop/etc/hadoop/mapred-site.xml
+      - ./config/hadoop-env.sh:/home/hadoop/bin/hadoop/etc/hadoop/hadoop-env.sh
+      - ./config/slaves:/home/hadoop/bin/hadoop/etc/hadoop/slaves
+      - ./config/zookeeper/zoo.cfg:/home/hadoop/bin/zookeeper/conf/zoo.cfg
+    networks:
+      hadoop-network:
+        ipv4_address: 172.72.0.2
+    extra_hosts:
+      - "nn-active:172.72.0.2"
+      - "nn-standby:172.72.0.3"
+      - "dn-1:172.72.0.4"
+      - "dn-2:172.72.0.5"
+      - "dn-3:172.72.0.6"
+    tty: true
+
+  namenode-2:
+    container_name: ${NN_STANDBY_NAME}
+    hostname: ${NN_STANDBY_NAME}
+    image: hadoop-cluster:latest
+    ports:
+      - 28080:8080
+      - 50271:50071 # Namenode_StandBy WEB UI
+      - 29888:19888
+      - 8280:8081
+      - 8380:8083
+      - 8480:8084
+    volumes:
+      - ./config/core-site.xml:/home/hadoop/bin/hadoop/etc/hadoop/core-site.xml
+      - ./config/hdfs-site.xml:/home/hadoop/bin/hadoop/etc/hadoop/hdfs-site.xml
+      - ./config/yarn-site.xml:/home/hadoop/bin/hadoop/etc/hadoop/yarn-site.xml
+      - ./config/mapred-site.xml:/home/hadoop/bin/hadoop/etc/hadoop/mapred-site.xml
+      - ./config/hadoop-env.sh:/home/hadoop/bin/hadoop/etc/hadoop/hadoop-env.sh
+      - ./config/slaves:/home/hadoop/bin/hadoop/etc/hadoop/slaves
+      - ./config/zookeeper/zoo.cfg:/home/hadoop/bin/zookeeper/conf/zoo.cfg
+    networks:
+      hadoop-network:
+        ipv4_address: 172.72.0.3
+    tty: true
+
+  datanode-1:
+    container_name: ${DN_NAME}-1
+    hostname: ${DN_NAME}-1
+    image: hadoop-cluster:latest
+    ports:
+      - 50172:50072 # Datanode WEB UI
+    volumes:
+      - ./config/core-site.xml:/home/hadoop/bin/hadoop/etc/hadoop/core-site.xml
+      - ./config/hdfs-site.xml:/home/hadoop/bin/hadoop/etc/hadoop/hdfs-site.xml
+      - ./config/yarn-site.xml:/home/hadoop/bin/hadoop/etc/hadoop/yarn-site.xml
+      - ./config/mapred-site.xml:/home/hadoop/bin/hadoop/etc/hadoop/mapred-site.xml
+      - ./config/hadoop-env.sh:/home/hadoop/bin/hadoop/etc/hadoop/hadoop-env.sh
+      - ./config/slaves:/home/hadoop/bin/hadoop/etc/hadoop/slaves
+      - ./config/zookeeper/zoo.cfg:/home/hadoop/bin/zookeeper/conf/zoo.cfg
+    networks:
+      hadoop-network:
+        ipv4_address: 172.72.0.4
+    tty: true
+
+  datanode-2:
+    container_name: ${DN_NAME}-2
+    hostname: ${DN_NAME}-2
+    image: hadoop-cluster:latest
+    ports:
+      - 50272:50072 # Datanode WEB UI
+    volumes:
+      - ./config/core-site.xml:/home/hadoop/bin/hadoop/etc/hadoop/core-site.xml
+      - ./config/hdfs-site.xml:/home/hadoop/bin/hadoop/etc/hadoop/hdfs-site.xml
+      - ./config/yarn-site.xml:/home/hadoop/bin/hadoop/etc/hadoop/yarn-site.xml
+      - ./config/mapred-site.xml:/home/hadoop/bin/hadoop/etc/hadoop/mapred-site.xml
+      - ./config/hadoop-env.sh:/home/hadoop/bin/hadoop/etc/hadoop/hadoop-env.sh
+      - ./config/slaves:/home/hadoop/bin/hadoop/etc/hadoop/slaves
+    networks:
+      hadoop-network:
+        ipv4_address: 172.72.0.5
+    tty: true
+
+  datanode-3:
+    container_name: ${DN_NAME}-3
+    hostname: ${DN_NAME}-3
+    image: hadoop-cluster:latest
+    ports:
+      - 50372:50072 # Datanode WEB UI
+    volumes:
+      - ./config/core-site.xml:/home/hadoop/bin/hadoop/etc/hadoop/core-site.xml
+      - ./config/hdfs-site.xml:/home/hadoop/bin/hadoop/etc/hadoop/hdfs-site.xml
+      - ./config/yarn-site.xml:/home/hadoop/bin/hadoop/etc/hadoop/yarn-site.xml
+      - ./config/mapred-site.xml:/home/hadoop/bin/hadoop/etc/hadoop/mapred-site.xml
+      - ./config/hadoop-env.sh:/home/hadoop/bin/hadoop/etc/hadoop/hadoop-env.sh
+      - ./config/slaves:/home/hadoop/bin/hadoop/etc/hadoop/slaves
+    networks:
+      hadoop-network:
+        ipv4_address: 172.72.0.6
+    tty: true
+#
+networks:
+  hadoop-network:
+    driver: bridge
+    external: true

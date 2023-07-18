@@ -1,0 +1,1 @@
+docker build -t hadoop-cluser:1.0 .

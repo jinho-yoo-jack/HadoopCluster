@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. See accompanying LICENSE file.
+-->
+<configuration>
+    <property>
+        <!-- Site specific YARN configuration properties -->
+        <!--    맵리듀스 어플리케이션을 위해 세팅되어야 하는 Shuffle 서비스명(mapreduce_shuffle로 지정하면 된다.)-->
+        <!--    보조서비스 이름은 알파벳 대소문자와 숫자 및 언더바(_)만 허용되며, 숫자로 시작할 수 없다.-->
+        <name>yarn.nodemanager.aux-services</name>
+        <value>mapreduce_shuffle</value>
+    </property>
+    <property>
+        <!--    기본값 org.apache.hadoop.mapred.ShuffleHandler-->
+        <!--    aux-services의 구현 클래스, 별도의 ShuffleHandler를 구현하지 않았다면 기본값을 사용하면 된다.-->
+        <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
+        <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+    </property>
+
+    <property>
+        <name>yarn.resourcemanager.hostname</name>
+        <value>kcp-nn-1</value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.fs.state-store.uri</name>
+        <value>/data/yarn/system/rmstore</value>
+    </property>
+    <property>
+        <name>yarn.web-proxy.address</name>
+        <value>0.0.0.0:8081</value>
+    </property>
+    <!--    <property>-->
+    <!--        <name>yarn.resourcemanager.scheduler.address</name>-->
+    <!--        <value>hadoop-master-1:8030</value>-->
+    <!--    </property>-->
+    <!--    <property>-->
+    <!--        <name>yarn.resourcemanager.resource-tracker.address</name>-->
+    <!--        <value>hadoop-master-1:8031</value>-->
+    <!--    </property>-->
+    <!--    <property>-->
+    <!--        <name>yarn.resourcemanager.address</name>-->
+    <!--        <value>hadoop-master-1:8032</value>-->
+    <!--    </property>-->
+    <!--    <property>-->
+    <!--        <name>yarn.resourcemanager.admin.address</name>-->
+    <!--        <value>hadoop-master-1:8033</value>-->
+    <!--    </property>-->
+    <!--    <property>-->
+    <!--        <name>yarn.resourcemanager.webapp.address</name>-->
+    <!--        <value>hadoop-master-1:8088</value>-->
+    <!--    </property>-->
+
+    <!--    노드메니저가 컨테이너를 위해 사용할 수 있는 총 CPU코어(가상코어포함)의 개수-->
+    <!--    기본값 8-->
+    <property>
+        <name>yarn.nodemanager.resource.cpu-vcores</name>
+        <value>6</value>
+    </property>
+
+
+    <!--    리소스메니저가 허용하는 가장 큰 컨테이너의 CPU코어(가상코어포함)의 개수-->
+    <!--    어플리케이션은 이 이상의 CPU코어 개수를 가진 컨테이너를 요청할 수 없다.-->
+    <!--    기본값 32-->
+    <property>
+        <name>yarn.scheduler.maximum-allocation-vcores</name>
+        <value>3</value>
+    </property>
+
+    <property>
+        <!--  노드메니저가 컨테이너를 위해 사용할 수 있는 총 메모리 크기-->
+        <!--  기본값 8192 (MB)-->
+        <name>yarn.nodemanager.resource.memory-mb</name>
+        <value>8192</value>
+    </property>
+
+    <property>
+        <!--  리소스매니저가 허용하는 가장 작은 컨테이너의 메모리 크기-->
+        <!--  어플리케이션이 이 값보다 작은 메모리를 가진 컨테이너를 요청하면 이 값으로 변경된 컨테이너를 할당한다.-->
+        <!--  기본값 1024 (MB)-->
+        <name>yarn.scheduler.minimum-allocation-mb</name>
+        <value>4096</value>
+    </property>
+    <property>
+        <!--  리소스메니저가 허용하는 가장 큰 컨테이너의 메모리 크기-->
+        <!--  어플리케이션은 이 이상의 메모리 크기를 가진 컨테이너를 요청할 수 없다.-->
+        <!--  기본값 8192 (MB)-->
+        <!--  mapreduce.map.memory.mb + mapreduce.reduce.memory.mb + yarn.app.mapreduce.am.resource.mb <= yarn.scheduler.maximum-allocation-mb -->
+        <name>yarn.scheduler.maximum-allocation-mb</name>
+        <value>8192</value>
+    </property>
+
+    <!-- 노드에서 에플리케이션 마스터(AM)를 실행할 때 할당하는 메모리 -->
+    <!-- 단, 이 값은 yarn.scheduler.maximum-allocation-mb 값보다는 작아야 한다.-->
+    <property>
+        <name>yarn.app.mapreduce.am.resource.mb</name>
+        <value>1024</value>
+    </property>
+
+    <!--    애플리케이션 마스터의 힙사이즈-->
+    <property>
+        <name>yarn.app.mapreduce.am.command-opts</name>
+        <value>-Xmx3276m</value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.env-whitelist</name>
+        <value>
+            JAVA_HOME,HADOOP_COMMON_HOME,HADOOP_HDFS_HOME,HADOOP_CONF_DIR,CLASSPATH_PREPEND_DISTCACHE,HADOOP_YARN_HOME,HADOOP_MAPRED_HOME
+        </value>
+    </property>
+
+    <!-- for Resource Manager HA configuration -->
+    <property>
+        <name>yarn.resourcemanager.ha.enabled</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.cluster-id</name>
+        <value>kcp-hadoop-cluster</value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.ha.rm-ids</name>
+        <value>rm1,rm2</value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.hostname.rm1</name>
+        <value>kcp-nn-1</value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.hostname.rm2</name>
+        <value>kcp-nn-2</value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.webapp.address.rm1</name>
+        <value>kcp-nn-1:18088</value>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.webapp.address.rm2</name>
+        <value>kcp-nn-2:18088</value>
+    </property>
+    <property>
+        <name>hadoop.zk.address</name>
+        <value>kcp-nn-1:62181,kcp-nn-2:62181,kcp-dn-1:62181</value>
+    </property>
+
+</configuration>
